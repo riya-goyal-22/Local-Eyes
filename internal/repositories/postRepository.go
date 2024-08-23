@@ -7,6 +7,16 @@ import (
 	"strings"
 )
 
+type PostRepositoryInterface interface {
+	Save(post *models.Post) error
+	Load() ([]*models.Post, error)
+	Delete(postID int) error
+	Update(post *models.Post) error
+	Like(postID int) error
+	SaveAll(posts []*models.Post) error
+	PostDisplayTable() error
+}
+
 type PostRepository struct {
 	FileRepository
 }

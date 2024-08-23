@@ -3,25 +3,43 @@
     "ID": 1,
     "Username": "riya",
     "Password": "70ede5a5926b34de07adca2229518cf573db67da77063add80e2d1d3f250d7d6",
+    "Type": "admin",
+    "Notification": [
+      {
+        "Message": "Notifying Newbie riya about new post: sample"
+      }
+    ]
+  },
+  {
+    "ID": 2,
+    "Username": "ria",
+    "Password": "70ede5a5926b34de07adca2229518cf573db67da77063add80e2d1d3f250d7d6",
     "Type": "newbie",
     "Notification": [
       {
-        "Message": "Notifying Newbie riya about new post: xyz"
+        "Message": "Notifying Newbie ria about new post: sample"
       }
     ]
   },
   {
     "ID": 1,
-    "Username": "ria",
+    "Username": "tom",
     "Password": "70ede5a5926b34de07adca2229518cf573db67da77063add80e2d1d3f250d7d6",
-    "Type": "resident",
+    "Type": "newbie",
     "Notification": []
   },
   {
     "ID": 1,
-    "Username": "admin",
+    "Username": "palak",
     "Password": "70ede5a5926b34de07adca2229518cf573db67da77063add80e2d1d3f250d7d6",
-    "Type": "admin",
+    "Type": "newbie",
+    "Notification": []
+  },
+  {
+    "ID": 2,
+    "Username": "riyaa",
+    "Password": "70ede5a5926b34de07adca2229518cf573db67da77063add80e2d1d3f250d7d6",
+    "Type": "resident",
     "Notification": []
   }
 ]

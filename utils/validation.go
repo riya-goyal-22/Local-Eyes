@@ -20,17 +20,3 @@ func ValidatePassword(password string) bool {
 func ValidateUserType(userType string) bool {
 	return userType == "newbie" || userType == "resident"
 }
-
-func GenerateID() string {
-	// Simulate ID generation
-	return "ID_" + randomString(10)
-}
-
-func randomString(length int) string {
-	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[i%len(charset)]
-	}
-	return string(b)
-}

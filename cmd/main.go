@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"local-eyes/cli"
 	"local-eyes/constants"
 	"local-eyes/internal/controllers"
@@ -13,4 +14,5 @@ func main() {
 	notificationCtrl := controllers.NewNotificationController(userRepo)
 
 	cli.StartCLI(userRepo, postRepo, notificationCtrl)
+	fmt.Println(constants.Blue + "Thank you 😊" + constants.Reset)
 }

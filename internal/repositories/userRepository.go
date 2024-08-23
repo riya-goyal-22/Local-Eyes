@@ -7,6 +7,17 @@ import (
 	"strings"
 )
 
+type UserRepositoryInterface interface {
+	Save(user *models.User) error
+	Load() ([]*models.User, error)
+	Delete(userID int) error
+	FindByUsernameAndPassword(username string, hashedPassword string) (*models.User, error)
+	FindAllNewbies() ([]*models.User, error)
+	SaveAll(users []*models.User) error
+	UserNameExists(name string) (bool, error)
+	UserDisplayTable() error
+}
+
 type UserRepository struct {
 	FileRepository
 }
@@ -144,12 +155,3 @@ func (ur *UserRepository) UserDisplayTable() error {
 	fmt.Println()
 	return nil
 }
-
-//// sum calculates the sum of integers in a slice
-//func sum(numbers []int) int {
-//	total := 0
-//	for _, num := range numbers {
-//		total += num
-//	}
-//	return total
-//}

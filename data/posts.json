@@ -2,9 +2,19 @@
   {
     "ID": 1,
     "Title": "sample",
-    "Content": "sample post",
+    "Content": "-------",
     "Type": "food",
-    "LikeCount": 1,
-    "UserId": 2
+    "LikeCount": 0,
+    "UserId": 3
+  }
+]
+},
+  {
+    "ID": 1,
+    "Title": "sample",
+    "Content": "-------",
+    "Type": "food",
+    "LikeCount": 0,
+    "UserId": 3
   }
 ]

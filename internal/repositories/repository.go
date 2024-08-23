@@ -25,7 +25,7 @@ func (r *FileRepository) Save(data interface{}) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	file, err := os.OpenFile(r.FilePath, os.O_RDWR|os.O_CREATE, 0666)
+	file, err := os.OpenFile(r.FilePath, os.O_CREATE, 0666)
 	if err != nil {
 		return err
 	}

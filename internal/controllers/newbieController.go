@@ -5,22 +5,25 @@ import (
 	"local-eyes/constants"
 	"local-eyes/internal/models"
 	"local-eyes/internal/repositories"
+	"local-eyes/utils"
 	"strconv"
 )
 
 type NewbieController struct {
 	User     *models.User
 	PostRepo *repositories.PostRepository
+	Notify   *NotificationController
 }
 
-func NewNewbieController(user *models.User, postRepo *repositories.PostRepository) *NewbieController {
-	return &NewbieController{User: user, PostRepo: postRepo}
+func NewNewbieController(user *models.User, postRepo *repositories.PostRepository, notify *NotificationController) *NewbieController {
+	return &NewbieController{User: user, PostRepo: postRepo, Notify: notify}
 }
 
 func (nc *NewbieController) HandleNewbieActions() {
 	for _, n := range nc.User.Notification {
 		nc.User.NotificationCh <- n
 	}
+	nc.Notify.RemoveNotification(nc.User)
 
 	select {
 	case val := <-nc.User.NotificationCh:
@@ -67,7 +70,7 @@ func (nc *NewbieController) ViewPosts() {
 }
 
 func (nc *NewbieController) LikePost() {
-	postID, _ := strconv.Atoi(constants.PromptInput("Enter post ID to like: "))
+	postID, _ := strconv.Atoi(utils.PromptInput("Enter post ID to like: "))
 
 	if err := nc.PostRepo.Like(postID); err != nil {
 		fmt.Println("Error liking post:", err)
@@ -77,7 +80,7 @@ func (nc *NewbieController) LikePost() {
 }
 
 func (nc *NewbieController) ViewFilterPost() {
-	postType := constants.PromptInput("Enter post type: ")
+	postType := utils.PromptInput("Enter post type: ")
 	posts, err := nc.PostRepo.Load()
 	if err != nil {
 		fmt.Println("Error loading posts:", err)

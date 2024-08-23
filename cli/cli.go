@@ -5,10 +5,10 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/manifoldco/promptui"
+	"local-eyes/UserCreation"
 	"local-eyes/constants"
 	"local-eyes/internal/controllers"
 	"local-eyes/internal/repositories"
-	"local-eyes/pkg/factory"
 	"local-eyes/utils"
 )
 
@@ -36,9 +36,9 @@ func StartCLI(userRepo *repositories.UserRepository, postRepo *repositories.Post
 }
 
 func signUp(userRepo *repositories.UserRepository) {
-	username := constants.PromptInput("Enter username: ")
+	username := utils.PromptInput("Enter username: ")
 	password := promptPassword("Enter password: ")
-	userType := constants.PromptInput("Enter user type (newbie/resident): ")
+	userType := utils.PromptInput("Enter user type (newbie/resident): ")
 	userExist, err := userRepo.UserNameExists(username)
 	if err != nil {
 		fmt.Println(err)
@@ -53,8 +53,7 @@ func signUp(userRepo *repositories.UserRepository) {
 	}
 
 	hashedPassword := hashPassword(password)
-	utils.UserID++
-	user := factory.CreateUser(utils.UserID, username, hashedPassword, userType)
+	user := userCreate.CreateUser(utils.GenerateUserID(), username, hashedPassword, userType)
 	if err := userRepo.Save(user); err != nil {
 		fmt.Println("Error signing up:", err)
 	} else {
@@ -63,7 +62,7 @@ func signUp(userRepo *repositories.UserRepository) {
 }
 
 func login(userRepo *repositories.UserRepository, postRepo *repositories.PostRepository, notificationCtrl *controllers.NotificationController) {
-	username := constants.PromptInput("Enter username: ")
+	username := utils.PromptInput("Enter username: ")
 	password := promptPassword("Enter password: ")
 
 	hashedPassword := hashPassword(password)
@@ -78,7 +77,7 @@ func login(userRepo *repositories.UserRepository, postRepo *repositories.PostRep
 			adminCtrl := controllers.NewAdminController(user, userRepo, postRepo)
 			adminCtrl.HandleAdminActions()
 		case "newbie":
-			newbieCtrl := controllers.NewNewbieController(user, postRepo)
+			newbieCtrl := controllers.NewNewbieController(user, postRepo, notificationCtrl)
 			newbieCtrl.HandleNewbieActions()
 		case "resident":
 			residentCtrl := controllers.NewResidentController(user, postRepo, notificationCtrl)

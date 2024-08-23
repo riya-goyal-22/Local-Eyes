@@ -5,6 +5,7 @@ import (
 	"local-eyes/constants"
 	"local-eyes/internal/models"
 	"local-eyes/internal/repositories"
+	"local-eyes/utils"
 	"strconv"
 )
 
@@ -53,7 +54,7 @@ func (ac *AdminController) HandleAdminActions() {
 }
 
 func (ac *AdminController) DeleteUser() {
-	userID, _ := strconv.Atoi(constants.PromptInput("Enter user ID to delete: "))
+	userID, _ := strconv.Atoi(utils.PromptInput("Enter user ID to delete: "))
 
 	if err := ac.UserRepo.Delete(userID); err != nil {
 		fmt.Println("Error deleting user:", err)
@@ -64,7 +65,7 @@ func (ac *AdminController) DeleteUser() {
 }
 
 func (ac *AdminController) DeletePost() {
-	postID, _ := strconv.Atoi(constants.PromptInput("Enter post ID to delete: "))
+	postID, _ := strconv.Atoi(utils.PromptInput("Enter post ID to delete: "))
 
 	if err := ac.PostRepo.Delete(postID); err != nil {
 		fmt.Println("Error deleting post:", err)

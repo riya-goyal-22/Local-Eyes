@@ -54,12 +54,11 @@ func (rc *ResidentController) HandleResidentActions() {
 }
 
 func (rc *ResidentController) CreatePost() {
-	title := constants.PromptInput("Enter post title: ")
-	content := constants.PromptInput("Enter post content: ")
-	pType := constants.PromptInput("Enter post type: ")
-	utils.PostID++
+	title := utils.PromptInput("Enter post title: ")
+	content := utils.PromptInput("Enter post content: ")
+	pType := utils.PromptInput("Enter post type: ")
 	post := &models.Post{
-		ID:        utils.PostID,
+		ID:        utils.GeneratePostId(),
 		Title:     title,
 		Content:   content,
 		Type:      pType,
@@ -75,10 +74,10 @@ func (rc *ResidentController) CreatePost() {
 }
 
 func (rc *ResidentController) UpdatePost() {
-	postId, _ := strconv.Atoi(constants.PromptInput("Enter post ID to update: "))
-	title := constants.PromptInput("Enter new post title: ")
-	content := constants.PromptInput("Enter new post content: ")
-	pType := constants.PromptInput("Enter new post type: ")
+	postId, _ := strconv.Atoi(utils.PromptInput("Enter post ID to update: "))
+	title := utils.PromptInput("Enter new post title: ")
+	content := utils.PromptInput("Enter new post content: ")
+	pType := utils.PromptInput("Enter new post type: ")
 
 	post := &models.Post{
 		ID:        postId,
@@ -96,7 +95,7 @@ func (rc *ResidentController) UpdatePost() {
 }
 
 func (rc *ResidentController) DeletePost() {
-	postID, err := strconv.Atoi(constants.PromptInput("Enter post ID to delete: "))
+	postID, err := strconv.Atoi(utils.PromptInput("Enter post ID to delete: "))
 	if err != nil {
 		fmt.Println("Invalid post ID")
 	}

@@ -1,4 +1,4 @@
-package factory
+package userCreate
 
 import (
 	"local-eyes/internal/models"
@@ -11,6 +11,5 @@ func CreateUser(id int, username, password, userType string) *models.User {
 		Password:     password,
 		Type:         userType,
 		Notification: make([]models.Notification, 0),
-		//Notification: make(chan models.Notification, 10),
 	}
 }

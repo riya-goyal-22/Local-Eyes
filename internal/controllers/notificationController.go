@@ -32,3 +32,19 @@ func (nc *NotificationController) NotifyNewPost(post *models.Post) {
 		fmt.Println(err)
 	}
 }
+
+func (nc *NotificationController) RemoveNotification(user *models.User) {
+	newbies, err := nc.userRepo.FindAllNewbies()
+	if err != nil {
+		fmt.Println(err)
+	}
+	for i, _ := range newbies {
+		if user.ID == newbies[i].ID {
+			newbies[i].Notification = []models.Notification{}
+		}
+	}
+	err = nc.userRepo.SaveAll(newbies)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
