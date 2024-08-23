@@ -4,7 +4,7 @@ import (
 	"local-eyes/internal/models"
 )
 
-func CreateUser(id, username, password, userType string) *models.User {
+func CreateUser(id int, username, password, userType string) *models.User {
 	return &models.User{
 		ID:           id,
 		Username:     username,

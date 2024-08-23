@@ -1,9 +1,27 @@
 [
   {
-    "ID": "ID_abcdefghij",
+    "ID": 1,
     "Username": "riya",
-    "Password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+    "Password": "70ede5a5926b34de07adca2229518cf573db67da77063add80e2d1d3f250d7d6",
     "Type": "newbie",
+    "Notification": [
+      {
+        "Message": "Notifying Newbie riya about new post: xyz"
+      }
+    ]
+  },
+  {
+    "ID": 1,
+    "Username": "ria",
+    "Password": "70ede5a5926b34de07adca2229518cf573db67da77063add80e2d1d3f250d7d6",
+    "Type": "resident",
+    "Notification": []
+  },
+  {
+    "ID": 1,
+    "Username": "admin",
+    "Password": "70ede5a5926b34de07adca2229518cf573db67da77063add80e2d1d3f250d7d6",
+    "Type": "admin",
     "Notification": []
   }
 ]

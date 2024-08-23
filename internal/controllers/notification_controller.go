@@ -19,12 +19,16 @@ func NewNotificationController(userRepo *repositories.UserRepository) *Notificat
 func (nc *NotificationController) NotifyNewPost(post *models.Post) {
 	newbies, err := nc.userRepo.FindAllNewbies()
 	if err != nil {
-		return
+		fmt.Println(err)
 	}
 	for i, newbie := range newbies {
 		notification := models.Notification{
-			Message: fmt.Sprintf("Notifying Newbie %s about new post: %s\n", newbie.Username, post.Title),
+			Message: fmt.Sprintf("Notifying Newbie %s about new post: %s", newbie.Username, post.Title),
 		}
 		newbies[i].Notification = append(newbies[i].Notification, notification)
+	}
+	err = nc.userRepo.SaveAll(newbies)
+	if err != nil {
+		fmt.Println(err)
 	}
 }

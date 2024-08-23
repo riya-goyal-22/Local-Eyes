@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/manifoldco/promptui"
+	"local-eyes/constants"
 	"local-eyes/internal/controllers"
 	"local-eyes/internal/repositories"
 	"local-eyes/pkg/factory"
@@ -13,10 +14,12 @@ import (
 
 func StartCLI(userRepo *repositories.UserRepository, postRepo *repositories.PostRepository, notificationCtrl *controllers.NotificationController) {
 	for {
-		fmt.Println("\nWelcome to Local Eyes!")
-		fmt.Println("1. Sign Up")
+		fmt.Println(constants.Magenta + "\n=====================================================")
+		fmt.Println("Welcome to Local Eyes!")
+		fmt.Println("=====================================================" + constants.Reset)
+		fmt.Println(constants.Blue + "1. Sign Up")
 		fmt.Println("2. Log In")
-		fmt.Println("3. Exit")
+		fmt.Println("3. Exit" + constants.Reset)
 
 		choice := getChoice()
 		switch choice {
@@ -27,15 +30,15 @@ func StartCLI(userRepo *repositories.UserRepository, postRepo *repositories.Post
 		case 3:
 			return
 		default:
-			fmt.Println("Invalid choice, please try again.")
+			fmt.Println(constants.Red + "Invalid choice, please try again." + constants.Reset)
 		}
 	}
 }
 
 func signUp(userRepo *repositories.UserRepository) {
-	username := promptInput("Enter username: ")
+	username := constants.PromptInput("Enter username: ")
 	password := promptPassword("Enter password: ")
-	userType := promptInput("Enter user type (admin/newbie/resident): ")
+	userType := constants.PromptInput("Enter user type (newbie/resident): ")
 	userExist, err := userRepo.UserNameExists(username)
 	if err != nil {
 		fmt.Println(err)
@@ -50,7 +53,8 @@ func signUp(userRepo *repositories.UserRepository) {
 	}
 
 	hashedPassword := hashPassword(password)
-	user := factory.CreateUser(utils.GenerateID(), username, hashedPassword, userType)
+	utils.UserID++
+	user := factory.CreateUser(utils.UserID, username, hashedPassword, userType)
 	if err := userRepo.Save(user); err != nil {
 		fmt.Println("Error signing up:", err)
 	} else {
@@ -59,7 +63,7 @@ func signUp(userRepo *repositories.UserRepository) {
 }
 
 func login(userRepo *repositories.UserRepository, postRepo *repositories.PostRepository, notificationCtrl *controllers.NotificationController) {
-	username := promptInput("Enter username: ")
+	username := constants.PromptInput("Enter username: ")
 	password := promptPassword("Enter password: ")
 
 	hashedPassword := hashPassword(password)
@@ -68,20 +72,24 @@ func login(userRepo *repositories.UserRepository, postRepo *repositories.PostRep
 		fmt.Println("Login failed:", err)
 		return
 	}
-
-	switch user.Type {
-	case "admin":
-		adminCtrl := controllers.NewAdminController(user, userRepo, postRepo)
-		adminCtrl.HandleAdminActions()
-	case "newbie":
-		newbieCtrl := controllers.NewNewbieController(user, postRepo)
-		newbieCtrl.HandleNewbieActions()
-	case "resident":
-		residentCtrl := controllers.NewResidentController(user, postRepo, notificationCtrl)
-		residentCtrl.HandleResidentActions()
-	default:
-		fmt.Println("Unknown user type.")
+	if user != nil {
+		switch user.Type {
+		case "admin":
+			adminCtrl := controllers.NewAdminController(user, userRepo, postRepo)
+			adminCtrl.HandleAdminActions()
+		case "newbie":
+			newbieCtrl := controllers.NewNewbieController(user, postRepo)
+			newbieCtrl.HandleNewbieActions()
+		case "resident":
+			residentCtrl := controllers.NewResidentController(user, postRepo, notificationCtrl)
+			residentCtrl.HandleResidentActions()
+		default:
+			fmt.Println("Unknown user type.")
+		}
+	} else {
+		fmt.Println("No user")
 	}
+
 }
 
 func getChoice() int {
@@ -91,23 +99,11 @@ func getChoice() int {
 	return choice
 }
 
-func promptInput(prompt string) string {
-	prompt1 := promptui.Prompt{
-		Label: prompt,
-	}
-	result, err := prompt1.Run()
-	if err != nil {
-		fmt.Println("Prompt failed:", err)
-		return ""
-	}
-	return result
-}
-
 func promptPassword(prompt string) string {
 	prompt1 := promptui.Prompt{
-		Label: prompt,
-		Mask:  '*',
-		//IsConfirm: false,
+		Label:     prompt,
+		Mask:      '*',
+		IsConfirm: false,
 	}
 	result, err := prompt1.Run()
 	if err != nil {

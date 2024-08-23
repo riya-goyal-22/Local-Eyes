@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"fmt"
+	"local-eyes/constants"
 	"local-eyes/internal/models"
 	"local-eyes/internal/repositories"
 	"local-eyes/utils"
+	"strconv"
 )
 
 type ResidentController struct {
@@ -19,15 +21,18 @@ func NewResidentController(user *models.User, postRepo *repositories.PostReposit
 
 func (rc *ResidentController) HandleResidentActions() {
 	for {
-		fmt.Println("\nResident actions:")
+		fmt.Println(constants.Cyan + "\n---------------------------------")
+		fmt.Println("Resident Account")
+		fmt.Println("----------------------------------" + constants.Reset)
+		fmt.Println(constants.Blue + "Resident actions:")
 		fmt.Println("1. Create Post")
 		fmt.Println("2. Update Post")
 		fmt.Println("3. Delete Post")
 		fmt.Println("4. View Post")
-		fmt.Println("5. Exit")
+		fmt.Println("5. Exit" + constants.Reset)
 
 		var choice int
-		fmt.Scan(&choice)
+		fmt.Scanln(&choice)
 
 		switch choice {
 		case 1:
@@ -49,20 +54,17 @@ func (rc *ResidentController) HandleResidentActions() {
 }
 
 func (rc *ResidentController) CreatePost() {
-	var title, content, pType string
-	fmt.Print("Enter post title: ")
-	fmt.Scanln(&title)
-	fmt.Print("Enter post content: ")
-	fmt.Scanln(&content)
-	fmt.Print("Enter post type: ")
-	fmt.Scanln(&pType)
-
+	title := constants.PromptInput("Enter post title: ")
+	content := constants.PromptInput("Enter post content: ")
+	pType := constants.PromptInput("Enter post type: ")
+	utils.PostID++
 	post := &models.Post{
-		ID:        utils.GenerateID(),
+		ID:        utils.PostID,
 		Title:     title,
 		Content:   content,
 		Type:      pType,
 		LikeCount: 0,
+		UserId:    rc.User.ID,
 	}
 	if err := rc.PostRepo.Save(post); err != nil {
 		fmt.Println("Error creating post:", err)
@@ -73,22 +75,18 @@ func (rc *ResidentController) CreatePost() {
 }
 
 func (rc *ResidentController) UpdatePost() {
-	var postID, title, content, pType string
-	fmt.Print("Enter post ID to update: ")
-	fmt.Scanln(&postID)
-	fmt.Print("Enter new title: ")
-	fmt.Scanln(&title)
-	fmt.Print("Enter new content: ")
-	fmt.Scanln(&content)
-	fmt.Print("Enter new post type: ")
-	fmt.Scanln(&pType)
+	postId, _ := strconv.Atoi(constants.PromptInput("Enter post ID to update: "))
+	title := constants.PromptInput("Enter new post title: ")
+	content := constants.PromptInput("Enter new post content: ")
+	pType := constants.PromptInput("Enter new post type: ")
 
 	post := &models.Post{
-		ID:        postID,
+		ID:        postId,
 		Title:     title,
 		Content:   content,
 		Type:      pType,
 		LikeCount: 0,
+		UserId:    rc.User.ID,
 	}
 	if err := rc.PostRepo.Update(post); err != nil {
 		fmt.Println("Error updating post:", err)
@@ -98,9 +96,10 @@ func (rc *ResidentController) UpdatePost() {
 }
 
 func (rc *ResidentController) DeletePost() {
-	var postID string
-	fmt.Print("Enter post ID to delete: ")
-	fmt.Scanln(&postID)
+	postID, err := strconv.Atoi(constants.PromptInput("Enter post ID to delete: "))
+	if err != nil {
+		fmt.Println("Invalid post ID")
+	}
 	if err := rc.PostRepo.Delete(postID); err != nil {
 		fmt.Println("Error deleting post:", err)
 	} else {
@@ -115,8 +114,8 @@ func (rc *ResidentController) ViewPost() {
 		fmt.Println("Error loading posts:", err)
 	}
 	for _, post := range posts {
-		if post.ID == rc.User.ID {
-			fmt.Printf("Post ID: %s\nTitle: %s\nContent: %s\n\n", post.ID, post.Title, post.Content)
+		if post.UserId == rc.User.ID {
+			fmt.Printf("Post ID: %d\nTitle: %s\nContent: %s\nType: %s\n", post.ID, post.Title, post.Content, post.Type)
 		}
 	}
 }

@@ -2,15 +2,14 @@ package repositories
 
 import (
 	"encoding/json"
+	"io"
 	"os"
 	"sync"
 )
 
-type Repository interface {
+type FileRepositoryInterface interface {
 	Save(interface{}) error
-	Load() ([]interface{}, error)
-	Delete(string) error
-	Update(interface{}) error
+	Load(interface{}) error
 }
 
 type FileRepository struct {
@@ -51,18 +50,13 @@ func (r *FileRepository) Load(data interface{}) error {
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
-	if err := decoder.Decode(data); err != nil {
+	err = decoder.Decode(data)
+	if err != nil {
+		// Handle the EOF error as a special case, since it indicates an empty file
+		if err == io.EOF {
+			return nil // No data to load, so it's not considered an error
+		}
 		return err
 	}
-	return nil
-}
-
-func (r *FileRepository) Delete(id string) error {
-	// Implementation depends on the structure of data and how it is managed
-	return nil
-}
-
-func (r *FileRepository) Update(data interface{}) error {
-	// Implementation depends on the structure of data and how it is managed
 	return nil
 }
